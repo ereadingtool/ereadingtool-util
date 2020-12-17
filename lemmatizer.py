@@ -28,41 +28,29 @@ text_textphrase = Table(
 class TextPhrase:
     pass
 
+# build table relative to this program, outside of project
 mapper_registry.map_imperatively(TextPhrase, text_textphrase)
 
+# engine that does phrase analysis
 morph = pymorphy2.MorphAnalyzer()
 
+# open a connection with DB
 with Session(engine) as session:
+
+    # query every phrase
     text_phrases = session.query(TextPhrase).all()
+
+    # iterate through each row in the table
     for row in text_phrases:
+
+        # grab the first analyzed phrase returned from analyzer
         parsed_phrase = morph.parse(row.phrase)[0]
+        
+        # store the lemma in the row, we wantz it
         row.lemma = parsed_phrase.normal_form
 
+    # v expensive to keep in loop, but if your program is barfing
+    # due to uncleaned data (perhaps violating UNIQUE), move it
+    # inside and you'll be given the problem row in the stack trace
     session.commit()
-# connection = engine.connect()
-# # result = connection.execute('select * from text_textphrase')
-# result = connection.execute('select * from text_textphrase')
 
-
-#   # the phrases may already be merged, this gives us the phrase as the lemma
-#   phrase = row['phrase']
-
-#   # we may be able to add a column to text_textphrase for the lemma
-#   # and add each of the lemmas to the database
-
-#   print(parsed_phrase.normal_form)
-
-#   row.lemma = parsed_phrase.normal_form
-
-# connection.commit()
-
-# i = 0
-# for row in result:
-#   print(row['lemma'])
-#   i+=1
-#   if i > 10:
-    # break
-  # SQL statement
-  #
-  #  UPDATE text_textphrase
-  #  SET lemma = phrase.normal_form
