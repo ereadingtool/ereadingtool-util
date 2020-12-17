@@ -1,0 +1,2 @@
+# Every night ask yandex to translate new texts
+0 0 * * 1 docker exec django_backend ereadingtool/manage.py create_text_phrases --run-cron
