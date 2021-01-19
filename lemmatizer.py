@@ -22,7 +22,8 @@ text_textphrase = Table(
     Column('instance', Integer, nullable=False),
     Column('phrase', String, nullable=False),
     Column('text_section_id', Integer, nullable=False),
-    Column('lemma', String)
+    Column('lemma', String),
+    Column('yandex_processed')
 )
 
 class TextPhrase:
